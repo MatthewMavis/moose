@@ -18,7 +18,7 @@ template <>
 InputParameters
 validParams<ElementDeleter>()
 {
-    InputParameters params = validParams<ElementDeleterBase>();
+    InputParameters params = validParams<ElementDeletionGeneratorBase>();
     params.addClassDescription(
         "Mesh modifier which removes elements with the element ID");
     params.addRequiredParam<std::vector<std::string>>("ids", "The IDs of element to be removed");
@@ -26,7 +26,7 @@ validParams<ElementDeleter>()
 }
 
 ElementDeleter::ElementDeleter(const InputParameters& parameters)
-  : ElementDeleterBase(parameters), _ids((getParam<std::vector<std::string>>("ids")))
+  : ElementDeletionGeneratorBase(parameters), _ids((getParam<std::vector<std::string>>("ids")))
 {
 }
 

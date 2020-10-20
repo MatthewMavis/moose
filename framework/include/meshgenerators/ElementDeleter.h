@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "ElementDeleterBase.h"
+#include "ElementDeletionGeneratorBase.h"
 #include "MooseEnum.h"
 
 class ElementDeleter;
@@ -19,7 +19,7 @@ template <>
 InputParameters validParams<ElementDeleter>();
 
 
-class ElementDeleter : public ElementDeleterBase
+class ElementDeleter : public ElementDeletionGeneratorBase
 {
 public:
 	ElementDeleter(const InputParameters& parameters);
