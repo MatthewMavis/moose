@@ -43,27 +43,12 @@ gmshFile::validParams()
                         false,
                         "True to indicate that the mesh file this generator is reading can be used "
                         "for restarting variables");
-  params.addRequiredParam<Real>("Hole_radius",
-                                       "Hole radius");
-
-  params.addRequiredParam<Real>("Cooling_Tube_Thickness",
-                                       "Cooling_Tube_Thickness");
-
-  params.addRequiredParam<Real>("Intermediate_Thickness",
-                                       "Intermediate_Thickness");
-
-  params.addRequiredParam<Real>("Small_Hole_Radius",
-                                       "Small_Hole_Radius");
-
-  params.addRequiredParam<Real>("Angle_Between_Holes",
-                                       "Angle_Between_Holes");
-
-  params.addRequiredParam<int>("HoleAmount",
-                                       "HoleAmount");
   params.addRequiredParam<MeshFileName>("geofile", "The gmsh .geo file to read.");
-
-  params.addRequiredParam<Real>("Thermal_Slit_Width",
-                                       "Thermal_Slit_Width");
+  params.addRequiredParam<int>("dim", "Dimensions of the mesh");
+  params.addParam<std::vector<std::string>>(
+    "param_names","The names of the variable parameter to change");
+  params.addParam<std::vector<Real>>(
+    "param_values","The values of the variable parameter to change");
 
   params.addClassDescription("Read a mesh from a file.");
   return params;
@@ -72,34 +57,28 @@ gmshFile::validParams()
 gmshFile::gmshFile(const InputParameters & parameters)
   : MeshGenerator(parameters), _file_name(getParam<MeshFileName>("file")),
   _geo_file_name(getParam<MeshFileName>("geofile")),
-  _hole_radius(parameters.get<Real>("Hole_radius")),
-  _Cooling_Tube_Thickness(parameters.get<Real>("Cooling_Tube_Thickness")),
-  _Intermediate_Thickness(parameters.get<Real>("Intermediate_Thickness")),
-  _Small_Hole_Radius(parameters.get<Real>("Small_Hole_Radius")),
-  _Angle_Between_Holes(parameters.get<Real>("Angle_Between_Holes")),
-  _HoleAmount(parameters.get<int>("HoleAmount")),
-  _Thermal_Slit_Width(parameters.get<Real>("Thermal_Slit_Width"))
+  _dim(getParam<int>("dim")),
+  _param_names(getParam<std::vector<std::string>>("param_names")),
+  _param_values(getParam<std::vector<Real>>("param_values"))
   
 {
-  
   gmsh::initialize();
 
-  gmsh::onelab::setNumber("Cooling_Tube_Thickness", {_Cooling_Tube_Thickness});
-  gmsh::onelab::setNumber("Intermediate_Thickness", {_Intermediate_Thickness});
-  gmsh::onelab::setNumber("holeSize", {_hole_radius});
-  gmsh::onelab::setNumber("Thermal_Slit_Width", {_Thermal_Slit_Width});
-
+  //Grab the names and values that need to be changed based on the user input.
+  //These values are entered into onelab::setNumber which adds a json database entry
+  //for them. This is then merged into the real .geo file in memory. (The .geo is not physically changed).
+  for (int i=0; i<(_param_names.size()); i++){
+    std::cout << _param_names[i] << " ," << _param_values[i] << std::endl;
+    gmsh::onelab::setNumber(_param_names[i], {_param_values[i]});
+  }
 
   gmsh::merge(_geo_file_name);
 
   gmsh::open(_geo_file_name);
-  std::string json;
-  gmsh::onelab::get(json);
-  std::cout << json;
 
+  gmsh::model::mesh::generate(_dim);
 
-  gmsh::model::mesh::generate(3);
-  gmsh::write("DivertorSimple.msh");
+  gmsh::write(_file_name);
 
   gmsh::finalize();
 

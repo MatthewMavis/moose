@@ -36,18 +36,11 @@ protected:
   
   const MeshFileName & _geo_file_name;
 
-  const Real _hole_radius;
+  const int _dim;
 
-  const Real _Cooling_Tube_Thickness;
-  
-  const Real _Intermediate_Thickness;
+  const std::vector<std::string> _param_names;
 
-  const Real _Small_Hole_Radius;
+  const std::vector<Real> _param_values;
 
-  const Real _Angle_Between_Holes;
-  
-  const int _HoleAmount;
-
-  const Real _Thermal_Slit_Width;
   
 };
