@@ -27,12 +27,12 @@ include $(FRAMEWORK_DIR)/moose.mk
 ALL_MODULES                 := no
 
 CHEMICAL_REACTIONS          := no
-CONTACT                     := no
+CONTACT                     := yes
 EXTERNAL_PETSC_SOLVER       := no
 FLUID_PROPERTIES            := no
 FUNCTIONAL_EXPANSION_TOOLS  := no
 GEOCHEMISTRY                := no
-HEAT_CONDUCTION             := no
+HEAT_CONDUCTION             := yes
 LEVEL_SET                   := no
 MISC                        := no
 NAVIER_STOKES               := no
@@ -41,12 +41,22 @@ POROUS_FLOW                 := no
 RAY_TRACING                 := no
 RDG                         := no
 RICHARDS                    := no
-STOCHASTIC_TOOLS            := no
-TENSOR_MECHANICS            := no
+STOCHASTIC_TOOLS            := yes
+TENSOR_MECHANICS            := yes
 XFEM                        := no
 
 include $(MOOSE_DIR)/modules/modules.mk
 ###############################################################################
+
+GMSH_DIR = $(shell which gmsh | sed 's/\/bin\/gmsh//')
+GMSH_INCDIR = $(GMSH_DIR)/include
+GMSH_LIBDIR = $(GMSH_DIR)/lib
+GMSH_INC = -I$(GMSH_INCDIR)
+GMSH_LIB = -Wl,-rpath,$(GMSH_LIBDIR) -L$(GMSH_LIBDIR) -lgmsh
+
+
+ADDITIONAL_INCLUDES += $(GMSH_INC)
+EXTERNAL_FLAGS += $(GMSH_LIB)
 
 # dep apps
 APPLICATION_DIR    := $(CURDIR)
