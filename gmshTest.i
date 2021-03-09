@@ -2,15 +2,11 @@
 [Mesh]
     [gmshTest]
         type = gmshFile
-        Hole_radius = 0.005
-        Cooling_Tube_Thickness = 0.002
-        Intermediate_Thickness = 0.001
-        Small_Hole_Radius = 0.0001
-        Angle_Between_Holes = 15
-        HoleAmount = 0
         file = DivertorSimple.msh
         geofile = DivertorSimple.geo
-        Thermal_Slit_Width = 0.0002
+        dim = 2
+        param_names = 'Cooling_Tube_Thickness Intermediate_Thickness holeSize Thermal_Slit_Width'
+        param_values = '0.002 0.001 0.005 0.0002'
     []
    
 []
@@ -43,7 +39,26 @@
     order = CONSTANT
     family = MONOMIAL
   [../]
-
+  [./stress_xx_nodal]
+    order = FIRST
+    family = MONOMIAL
+  [../]
+  [./strain_xx_nodal]
+    order = FIRST
+    family = MONOMIAL
+  [../]
+  [./strain_yy_nodal]
+    order = FIRST
+    family = MONOMIAL
+  [../]
+  [./strain_zz_nodal]
+    order = FIRST
+    family = MONOMIAL
+  [../]
+  [./vonmises_nodal]
+    order = FIRST
+    family = MONOMIAL
+  [../]
 []
 
 
@@ -62,12 +77,11 @@
     variable = temp
     value = 2e1 #W/m^2
   []
-
 []
 
 [AuxKernels]
   [./eigenstrain_yy]
-    type = RankTwoAux
+    type = ADRankTwoAux
     rank_two_tensor = eigenstrain
     variable = eigenstrain_yy
     index_i = 1
@@ -75,7 +89,7 @@
     execute_on = 'initial timestep_end'
   [../]
   [./eigenstrain_xx]
-    type = RankTwoAux
+    type = ADRankTwoAux
     rank_two_tensor = eigenstrain
     variable = eigenstrain_xx
     index_i = 0
@@ -84,7 +98,7 @@
   [../]
 
   [./total_strain_yy]
-    type = RankTwoAux
+    type = ADRankTwoAux
     rank_two_tensor = total_strain
     variable = total_strain_yy
     index_i = 1
@@ -92,12 +106,46 @@
     execute_on = 'initial timestep_end'
   [../]
   [./total_strain_xx]
-    type = RankTwoAux
+    type = ADRankTwoAux
     rank_two_tensor = total_strain
     variable = total_strain_xx
     index_i = 0
     index_j = 0
     execute_on = 'initial timestep_end'
+  [../]
+  [./stress_xx]
+    type = ADRankTwoAux
+    rank_two_tensor = stress
+    variable = stress_xx_nodal
+    index_i = 0
+    index_j = 0
+ [../]
+ [./strain_xx]
+    type = ADRankTwoAux
+    rank_two_tensor = total_strain
+    variable = strain_xx_nodal
+    index_i = 0
+    index_j = 0
+ [../]
+ [./strain_yy]
+    type = ADRankTwoAux
+    rank_two_tensor = total_strain
+    variable = strain_xx_nodal
+    index_i = 1
+    index_j = 1
+  [../]
+ [./strain_zz]
+    type = ADRankTwoAux
+    rank_two_tensor = total_strain
+    variable = strain_zz_nodal
+    index_i = 2
+    index_j = 2
+  [../]
+  [./vonmises]
+    type = ADRankTwoScalarAux
+    rank_two_tensor = stress
+    variable = vonmises_nodal
+    scalar_type = VonMisesStress
   [../]
 []
 
@@ -105,10 +153,12 @@
   [./TensorMechanics]
     [./Master]
       [./all]
-        strain = SMALL
+        strain = FINITE
         incremental = true
         add_variables = true
         eigenstrain_names = eigenstrain
+        use_automatic_differentiation = true
+        generate_output = 'strain_xx strain_yy strain_zz vonmises_stress'
       [../]
     [../]
   [../]
@@ -152,85 +202,59 @@
     prop_values = '8900' #kg/m^3 @ 296K
     block = CoolingTube
   []
-  [H20_thermal]
-    type = ADHeatConductionMaterial
-    specific_heat = 4187 # J/kg-K
-    thermal_conductivity = 0.6 # W/m*K
-    block = Hole
-  []
-  [H20_density]
-    type = ADGenericConstantMaterial
-    prop_names = 'density'
-    prop_values = '997' #kg/m^3 @ 296K
-    block = Hole
-  []
   [./elasticity_tensor_tungsten]
-    type = ComputeIsotropicElasticityTensor
-    youngs_modulus = 390
+    type = ADComputeIsotropicElasticityTensor
+    youngs_modulus = 390E9
     poissons_ratio = 0.27
     block = Tungsten
   [../]
   [./thermal_expansion_strain_tungsten]
-    type = ComputeThermalExpansionEigenstrain
+    type = ADComputeThermalExpansionEigenstrain
     stress_free_temperature = 1300
-    thermal_expansion_coeff = 4.3e-6
+    thermal_expansion_coeff = 4.3E-6
     temperature = temp
     eigenstrain_name = eigenstrain
     block = Tungsten
   [../]
   [./elasticity_tensor_CoolingTube]
-    type = ComputeIsotropicElasticityTensor
-    youngs_modulus = 121
+    type = ADComputeIsotropicElasticityTensor
+    youngs_modulus = 121E9
     poissons_ratio = 0.34
     block = CoolingTube
   [../]
   [./thermal_expansion_strain_CoolingTube]
-    type = ComputeThermalExpansionEigenstrain
+    type = ADComputeThermalExpansionEigenstrain
     stress_free_temperature = 450
-    thermal_expansion_coeff = 16.7e-6
+    thermal_expansion_coeff = 16.7E-6
     temperature = temp
     eigenstrain_name = eigenstrain
     block = CoolingTube
   [../]
   [./elasticity_tensor_Itermediate]
-    type = ComputeIsotropicElasticityTensor
-    youngs_modulus = 137
+    type = ADComputeIsotropicElasticityTensor
+    youngs_modulus = 137E9
     poissons_ratio = 0.3
     block = Intermediate
   [../]
   [./thermal_expansion_strain_Itermediate]
-    type = ComputeThermalExpansionEigenstrain
+    type = ADComputeThermalExpansionEigenstrain
     stress_free_temperature = 450
-    thermal_expansion_coeff = 17e-6
+    thermal_expansion_coeff = 17E-6
     temperature = temp
     eigenstrain_name = eigenstrain
     block = Intermediate
   [../]
-  [./elasticity_tensor_Hole]
-    type = ComputeIsotropicElasticityTensor
-    youngs_modulus = 2.2
-    poissons_ratio = 0.1
-    block = Hole
-  [../]
-  [./thermal_expansion_strain_Hole]
-    type = ComputeThermalExpansionEigenstrain
-    stress_free_temperature = 278
-    thermal_expansion_coeff = 69e-6
-    temperature = temp
-    eigenstrain_name = eigenstrain
-    block = Hole
-  [../]
-  [./small_stress]
-    type = ComputeFiniteStrainElasticStress
+  [./finite_stress]
+    type = ADComputeFiniteStrainElasticStress
   [../]
 []
 
 [BCs]
   [Heat_In]
-    type = DirichletBC
+    type = ADNeumannBC
     variable = temp
     boundary = Top
-    value =  3367 # 100 kW/m^2
+    value =  5e6 # 5 MW/m^2
   []
   [Heat_Out]
     type = ADConvectiveHeatFluxBC
@@ -239,33 +263,21 @@
     T_infinity = 300 #K
     heat_transfer_coefficient = 10
   []
-  [Tung_Int_boundary]
-    type = ADConvectiveHeatFluxBC
-    variable = temp
-    boundary = Tung_Int_Boundary
-    T_infinity = 300 #K
-    heat_transfer_coefficient = 10
-  []
-  [x_top]
-    type = DirichletBC
+  [bottom_Disp_x]
+    type = ADDirichletBC
     variable = disp_x
-    boundary = Top
-    value = 0.0
+    boundary = Bottom
+    value = 0
   []
-  [y_top]
-    type = DirichletBC
+  [bottom_Disp_y]
+    type = ADDirichletBC
     variable = disp_y
-    boundary = Top
-    value = 0.0
+    boundary = Bottom
+    value = 0
   []
 []
 
-[Preconditioning]
-  [SMP]
-    type = SMP
-    full = true
-  []
-[]
+
 
 [Postprocessors]
   [avg]
@@ -318,19 +330,30 @@
     variable = temp
     execute_on = 'initial timestep_end'
   [../]
+  [average_temperature]
+    type = ElementAverageValue
+    variable = temp
+  []
+  [inlet_heat_flux]
+    type = ADSideFluxAverage
+    variable = temp
+    boundary = Top
+    diffusivity = thermal_conductivity
+  []
 []
 
 
 [Executioner]
   type = Transient
-  solve_type = 'PJFNK'
+  solve_type = 'Newton'
   end_time = 10
-  dt = 0.1
-  petsc_options_iname = '-pc_type -pc_hypre_type'
-  petsc_options_value = 'hypre boomeramg'
+  dt = 0.01
+  petsc_options_iname = '-pc_type -ksp_gmres_restart'
+  petsc_options_value = 'ilu      101'
   nl_rel_tol = 1e-6
   l_abs_tol = 1e-6
   timestep_tolerance = 1e-6
+  automatic_scaling = true
 []
 
 

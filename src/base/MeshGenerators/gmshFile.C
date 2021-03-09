@@ -46,9 +46,9 @@ gmshFile::validParams()
   params.addRequiredParam<MeshFileName>("geofile", "The gmsh .geo file to read.");
   params.addRequiredParam<int>("dim", "Dimensions of the mesh");
   params.addParam<std::vector<std::string>>(
-    "param_names","The names of the variable parameter to change");
+    "param_names","The names of the variable parameters to change");
   params.addParam<std::vector<Real>>(
-    "param_values","The values of the variable parameter to change");
+    "param_values","The values of the variable parameters to change");
 
   params.addClassDescription("Read a mesh from a file.");
   return params;
@@ -67,8 +67,9 @@ gmshFile::gmshFile(const InputParameters & parameters)
   //Grab the names and values that need to be changed based on the user input.
   //These values are entered into onelab::setNumber which adds a json database entry
   //for them. This is then merged into the real .geo file in memory. (The .geo is not physically changed).
-  for (int i=0; i<(_param_names.size()); i++){
-    std::cout << _param_names[i] << " ," << _param_values[i] << std::endl;
+  int param_amount = _param_names.size();
+  for (int i=0; i< param_amount; i++){
+    std::cout << "Changing "<< _param_names[i] << " to " << _param_values[i] << std::endl;
     gmsh::onelab::setNumber(_param_names[i], {_param_values[i]});
   }
 
