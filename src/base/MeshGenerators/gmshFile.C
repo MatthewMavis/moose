@@ -75,7 +75,7 @@ gmshFile::gmshFile(const InputParameters & parameters)
 
   gmsh::merge(_geo_file_name);
 
-  gmsh::open(_geo_file_name);
+  //gmsh::open(_geo_file_name);
 
   gmsh::model::mesh::generate(_dim);
 
