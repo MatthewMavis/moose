@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //* This file is part of the MOOSE framework
 //* https://www.mooseframework.org
 //*
@@ -8,6 +7,4 @@
 //* Licensed under LGPL 2.1, please see LICENSE for details
 //* https://www.gnu.org/licenses/lgpl-2.1.html
 
-=======
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)
 // All code for this templated class is in the header file.

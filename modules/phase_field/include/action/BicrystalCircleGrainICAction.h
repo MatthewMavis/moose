@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //* This file is part of the MOOSE framework
 //* https://www.mooseframework.org
 //*
@@ -22,26 +21,10 @@ public:
   static InputParameters validParams();
 
   BicrystalCircleGrainICAction(const InputParameters & params);
-=======
-#ifndef BICRYSTALCIRCLEGRAINICACTION_H
-#define BICRYSTALCIRCLEGRAINICACTION_H
-
-#include "InputParameters.h"
-#include "Action.h"
-/**
- * Automatically generates all variables to model a polycrystal with crys_num orderparameters
- */
-
-class BicrystalCircleGrainICAction: public Action
-{
-public:
-  BicrystalCircleGrainICAction(const std::string & name, InputParameters params);
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)
 
   virtual void act();
 
 private:
-<<<<<<< HEAD
   const std::string _var_name_base;
   const unsigned int _op_num;
 
@@ -51,21 +34,3 @@ private:
 
   const bool _3D_sphere;
 };
-=======
-  static const Real _abs_zero_tol;
-
-  std::string _var_name_base;
-  unsigned int _crys_num;
-
-  Real _radius;
-  Real _x, _y, _z;
-  Real _int_width;
-
-  bool _3D_sphere;
-};
-
-template<>
-InputParameters validParams<BicrystalCircleGrainICAction>();
-
-#endif //BICRYSTALCIRCLEGRAINICACTION_H
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)

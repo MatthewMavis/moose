@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //* This file is part of the MOOSE framework
 //* https://www.mooseframework.org
 //*
@@ -15,42 +14,17 @@
 /**
  * Calculate the kinetic mineral species kinetic rate according to transient
  * state theory rate law
-=======
-#ifndef KINETICDISPRERATEAUX_H
-#define KINETICDISPRERATEAUX_H
-
-#include "AuxKernel.h"
-
-//Forward Declarations
-class KineticDisPreRateAux;
-
-template<>
-InputParameters validParams<KineticDisPreRateAux>();
-
-/**
- * Coupled auxiliary value
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)
  */
 class KineticDisPreRateAux : public AuxKernel
 {
 public:
-<<<<<<< HEAD
   static InputParameters validParams();
 
   KineticDisPreRateAux(const InputParameters & parameters);
-=======
-
-  /**
-   * Factory constructor, takes parameters so that all derived classes can be built using the same
-   * constructor.
-   */
-  KineticDisPreRateAux(const std::string & name, InputParameters parameters);
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)
 
   virtual ~KineticDisPreRateAux() {}
 
 protected:
-<<<<<<< HEAD
   virtual Real computeValue() override;
 
   /// Equilibrium constant at reference temperature
@@ -72,14 +46,3 @@ protected:
   /// Coupled primary species concentrations
   const std::vector<const VariableValue *> _vals;
 };
-=======
-  virtual Real computeValue();
-
-  Real _log_k,_r_area,_ref_kconst,_e_act,_gas_const,_ref_temp,_sys_temp;
-  std::vector<Real> _sto_v;
-
-  std::vector<VariableValue *> _vals;
-};
-
-#endif //KINETICDISPRERATEAUX_H
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)

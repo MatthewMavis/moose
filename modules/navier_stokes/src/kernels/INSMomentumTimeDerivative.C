@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //* This file is part of the MOOSE framework
 //* https://www.mooseframework.org
 //*
@@ -26,31 +25,10 @@ INSMomentumTimeDerivative::INSMomentumTimeDerivative(const InputParameters & par
   : TimeDerivative(parameters), _rho(getMaterialProperty<Real>("rho_name"))
 {
 }
-=======
-#include "INSMomentumTimeDerivative.h"
-
-template<>
-InputParameters validParams<INSMomentumTimeDerivative>()
-{
-  InputParameters params = validParams<TimeDerivative>();
-  params.addRequiredParam<Real>("rho", "density");
-  return params;
-}
-
-
-INSMomentumTimeDerivative::INSMomentumTimeDerivative(const std::string & name,
-                                                     InputParameters parameters) :
-  TimeDerivative(name,parameters),
-  _rho(getParam<Real>("rho"))
-{}
-
-
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)
 
 Real
 INSMomentumTimeDerivative::computeQpResidual()
 {
-<<<<<<< HEAD
   return _rho[_qp] * TimeDerivative::computeQpResidual();
 }
 
@@ -62,22 +40,6 @@ INSMomentumTimeDerivative::computeQpJacobian()
 
 Real
 INSMomentumTimeDerivative::computeQpOffDiagJacobian(unsigned)
-=======
-  return _rho * TimeDerivative::computeQpResidual();
-}
-
-
-
-Real
-INSMomentumTimeDerivative::computeQpJacobian()
-{
-  return _rho * TimeDerivative::computeQpJacobian();
-}
-
-
-
-Real INSMomentumTimeDerivative::computeQpOffDiagJacobian(unsigned)
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)
 {
   return 0.;
 }

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //* This file is part of the MOOSE framework
 //* https://www.mooseframework.org
 //*
@@ -14,18 +13,6 @@
 #include "AuxKernel.h"
 
 // Forward Declarations
-=======
-#ifndef NSENTHALPYAUX_H
-#define NSENTHALPYAUX_H
-
-#include "AuxKernel.h"
-
-//Forward Declarations
-class NSEnthalpyAux;
-
-template<>
-InputParameters validParams<NSEnthalpyAux>();
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)
 
 /**
  * Nodal auxiliary variable, for computing enthalpy at the nodes.
@@ -40,36 +27,14 @@ InputParameters validParams<NSEnthalpyAux>();
 class NSEnthalpyAux : public AuxKernel
 {
 public:
-<<<<<<< HEAD
   static InputParameters validParams();
 
   NSEnthalpyAux(const InputParameters & parameters);
-=======
-
-  /**
-   * Factory constructor, takes parameters so that all derived classes can be built using the same
-   * constructor.
-   */
-  NSEnthalpyAux(const std::string & name, InputParameters parameters);
-
-  virtual ~NSEnthalpyAux() {}
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)
 
 protected:
   virtual Real computeValue();
 
-<<<<<<< HEAD
   const VariableValue & _rho;
   const VariableValue & _rhoE;
   const VariableValue & _pressure;
 };
-=======
-  VariableValue & _rho;
-  VariableValue & _rhoe;
-  VariableValue & _pressure;
-
-  Real _gamma;
-};
-
-#endif // NSENTHALPYAUX_H
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)

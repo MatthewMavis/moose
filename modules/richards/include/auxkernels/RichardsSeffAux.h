@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //* This file is part of the MOOSE framework
 //* https://www.mooseframework.org
 //*
@@ -9,21 +8,11 @@
 //* https://www.gnu.org/licenses/lgpl-2.1.html
 
 #pragma once
-=======
-/*****************************************/
-/* Written by andrew.wilkins@csiro.au    */
-/* Please contact me if you make changes */
-/*****************************************/
-
-#ifndef RICHARDSSEFFAUX_H
-#define RICHARDSSEFFAUX_H
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)
 
 #include "AuxKernel.h"
 
 #include "RichardsSeff.h"
 
-<<<<<<< HEAD
 // Forward Declarations
 
 /**
@@ -35,23 +24,10 @@ public:
   static InputParameters validParams();
 
   RichardsSeffAux(const InputParameters & parameters);
-=======
-//Forward Declarations
-class RichardsSeffAux;
-
-template<>
-InputParameters validParams<RichardsSeffAux>();
-
-class RichardsSeffAux: public AuxKernel
-{
-public:
-  RichardsSeffAux(const std::string & name, InputParameters parameters);
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)
 
 protected:
   virtual Real computeValue();
 
-<<<<<<< HEAD
   /**
    * The user object that defines effective saturation
    * as function of porepressure (or porepressures in the
@@ -66,12 +42,3 @@ protected:
    */
   const std::vector<const VariableValue *> _pressure_vals;
 };
-=======
-  const RichardsSeff & _seff_UO;
-
-  std::vector<unsigned int> _pressure_vars;
-  std::vector<VariableValue *> _pressure_vals;
-};
-
-#endif // RICHARDSSEFFAUX_H
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)

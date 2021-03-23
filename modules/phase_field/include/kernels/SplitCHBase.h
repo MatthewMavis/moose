@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //* This file is part of the MOOSE framework
 //* https://www.mooseframework.org
 //*
@@ -21,25 +20,6 @@ public:
   static InputParameters validParams();
 
   SplitCHBase(const InputParameters & parameters);
-=======
-#ifndef SPLITCHBase_H
-#define SPLITCHBase_H
-
-#include "Kernel.h"
-
-
-//Forward Declarations
-class SplitCHBase;
-
-template<>
-InputParameters validParams<SplitCHBase>();
-
-class SplitCHBase : public Kernel
-{
-public:
-
-  SplitCHBase(const std::string & name, InputParameters parameters);
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)
 
 protected:
   enum PFFunctionType
@@ -52,12 +32,4 @@ protected:
   virtual Real computeQpOffDiagJacobian(unsigned int jvar);
   virtual Real computeDFDC(PFFunctionType type);
   virtual Real computeDEDC(PFFunctionType type);
-<<<<<<< HEAD
 };
-=======
-
-private:
-
-};
-#endif //SPLITCHBase_H
->>>>>>> d297f50cb1 (Merging Modules into MOOSE #2460)
